@@ -3,6 +3,5 @@ class Engine(val Controller: (String, Array[Array[Char]], Boolean) => Unit , val
       while (true){
         val input = scala.io.StdIn.readLine("Enter your move: ")
       }
-//cefwef
   }
 }

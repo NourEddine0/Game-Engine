@@ -7,7 +7,7 @@
 /project
 target
 build
-*.sbt
+.sbt
 app.spec
 */.idea
 /dist
