@@ -2,9 +2,9 @@ import scala.io.StdIn.readLine
 import scala.util.matching.Regex
 import java.util.Scanner
 
-object XO  {
+object XO extends  App {
 	def getDrawer: Array[Array[Char]] => Unit = XODrawer;
-	def getController:(Array[Array[Char]], String, Boolean) => Unit = XOController;
+	def getController:(Array[Array[Char]], String, Boolean) => Boolean = XOController;
 	def getBoard():Array[Array[Char]] ={
 		var Board = Array.ofDim[Char](3, 3);
 		return Board;
@@ -25,7 +25,7 @@ object XO  {
 		printBoard (board)
 	}
 
-  	def XOController(board: Array[Array[Char]], input:String, turn:Boolean): Unit = {
+  	def XOController(board: Array[Array[Char]], input:String, turn:Boolean): Boolean = {
 			/* Resets the board to be empty for the next game. */
 			def resetBoard(): Unit = {
 				for (i <- 0 to board.length - 1) {
@@ -37,7 +37,7 @@ object XO  {
 			val pattern = "([1-3])([a-cA-C])".r     /* Input Regex pattern */
 			var index1 = 0;             /* The parsed user input. */
 			var index2 = 0;
-			/* Detects the maching of the input & retuns a boolean value according
+			/* Detects the matching of the input & returns a boolean value according
       to the matching result. */
 			def matchInput(in: String): Boolean = in match {
 				case pattern(_*) => {
@@ -54,13 +54,13 @@ object XO  {
 				|| board(index1)(index2).toString.matches("X|O")) {
 				/* Performing the action. */
 				println("Invalid input")
-				return false;
+				false;
 
 
 			}
 			else{
 				board(index1)(index2) = if (turn) 'X' else 'O'
-				return true
+				true
 			}
 		}
 }
