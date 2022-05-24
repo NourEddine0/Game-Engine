@@ -1,4 +1,4 @@
-import scalafx.application.JFXApp3
+/*import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.effect.DropShadow
@@ -43,3 +43,4 @@ object ScalaFXHelloWorld extends JFXApp3 {
     }
   }
 }
+*/
