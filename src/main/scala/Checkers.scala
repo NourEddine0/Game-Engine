@@ -4,16 +4,16 @@ object Checkers extends App {
 	
 	var board :Array[Array[String]] = Array(
 		Array("- ", ".O", "- ", ".O", "- ", ".O", "- ", ".O"),
-		Array(".O", "- ", ".O", "- ", ".O", "- ", ".O", "- "),
+		Array(".O", "- ", ".O", "- ", ".O", "- ", ". ", "- "),
 		Array("- ", ".O", "- ", ".O", "- ", ".O", "- ", ".O"),
 		Array(". ", "- ", ". ", "- ", ". ", "- ", ". ", "- "),
-		Array("- ", ". ", "- ", ". ", "- ", ". ", "- ", ". "),
+		Array("- ", ". ", "- ", ".O", "- ", ". ", "- ", ". "),
 		Array(".o", "- ", ".o", "- ", ".o", "- ", ".o", "- "),
 		Array("- ", ".o", "- ", ".o", "- ", ".o", "- ", ".o"),
 		Array(".o", "- ", ".o", "- ", ".o", "- ", ".o", "- ") )
 
 	def getDrawer: Array[Array[String]] => Unit = CheckersDrawer
-	def getController: (Array[Array[String]], String, Boolean) => Int = CheckersController
+	def getController: (Array[Array[String]], String, Boolean) => Boolean = CheckersController
 	def getBoard: Array[Array[String]] = board
 
 	def CheckersDrawer(board: Array[Array[String]]): Unit = {
@@ -56,7 +56,7 @@ object Checkers extends App {
 		printBoard(board)
 	}
 	
-	def CheckersController (Board: Array[Array[String]], input: String, turn: Boolean):Int = {
+	def CheckersController (Board: Array[Array[String]], input: String, turn: Boolean):Boolean = {
 		
 		val player = if (turn) -1 else 1
 		
@@ -196,7 +196,21 @@ object Checkers extends App {
 			if (valid && !cont) 1 else if (valid && cont) 0 else -1
 		}
 		
-		matchInput(input)
+		val BoardCopy = Board.map(_.clone())
+		val inputs = input.split(" ")
+		val result = inputs.map(x => matchInput(x))
+		var ans = result.last == 1
+		ans = ans && result.dropRight(1).forall(_ == 0)
+		
+		if (!ans) {
+			for (i <- Board.indices){
+				for (j <- Board.indices){
+					Board(i)(j) = BoardCopy(i)(j)
+				}
+			}
+			false
+			}
+		else true
 	}
 
 	var turn = true
@@ -206,12 +220,9 @@ object Checkers extends App {
 		CheckersDrawer(board)
 		print(if(turn) "Player 1's turn!" else "Player 2's turn!")
 		input = readLine(" Enter the move: ")
-		var move = CheckersController(board, input, turn)
-		while(move == -1){
+		while(!CheckersController(board, input, turn)){
 			input = readLine("Invalid move! Enter the move: ")
-			move = CheckersController(board, input, turn)
 		}
-		if (move == 1)
-			turn = !turn
+		turn = !turn
 	}
 }
