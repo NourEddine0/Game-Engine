@@ -36,7 +36,7 @@ object Chess extends App{
       val reset = RESET
       //print the chess board
       println("\nThe Chess Board:")
-      println("\t\tBlack Player (2)")
+      println("\t\tBlack Player")
       print("    ")
       //print A to H above the board
       List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach print
@@ -44,29 +44,24 @@ object Chess extends App{
       for(i<- b.indices){
         print(s"${8-i}  " + bg1);  //print 1 to 8 on the left side
         for(j<- b.indices){
-          print(s"${if(b(i)(j)(0) == '-') bg1 else bg2}" +
-                s" ${if(b(i)(j)(1).isLower) p1 else p2}${b(i)(j)(1)} ")
+          print(s"${if(b(i)(j)(0) == '-' || b(i)(j)(0) == '_') bg1 else bg2}" +
+            s" ${if(b(i)(j)(1).isLower) p1 else p2}${b(i)(j)(1)} ")
         }
         println(s"$reset  ${8-i}"); //print 1 to 8 on the right side
       }
       print("    ")
       //print A to H below the board
       List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach print
-      println("\n\t\tWhite Player (1)")
+      println("\n\t\tWhite Player")
     }
     printBoard(board)
   }
 
-  def ChessController(board: Array[Array[String]],
-                      input: String,
-                      turn: Boolean): Boolean =
+  def ChessController(board: Array[Array[String]], input: String, turn: Boolean): Boolean =
   {
-    val pattern = "([1-8])([a-hA-H])([1-8])([a-hA-H])".r
+    val pattern = "([1-8])([a-hA-H])([1-8])([a-hA-H])([nbrq]?)".r
     var (fr, fc, tr, tc) = (0, 0, 0, 0)
-    var promotion = false
-    //local vars for king checks
-    var wcheck = 0
-    var bcheck = 0
+    val promotionInfo: Array[Char] = Array(' ', ' ')
     /* Pattern Matcher */
     def matchInput(in: String): Boolean = in match {
       case pattern(_*) =>
@@ -78,24 +73,63 @@ object Chess extends App{
       case _ => false
     }
 
-    def Empty(a: Char) = a.isSpaceChar
+    def Empty(y: Int, x: Int) = board(y)(x)(1).isSpaceChar
     def Ally(a: Char) = a.isLower && turn || a.isUpper && !turn
+    def notMoved(y: Int, x: Int) = board(y)(x)(0) == '-' || board(y)(x)(0) == '.'
+    def castlingMove(): Boolean = {
+      val (dx, dy) = (tc - fc, tr - fr)
+      //white king in k{7,4}
+      if(turn && dx.abs == 2 && dy == 0 && notMoved(7, 4)){//king didn't move before
+        if(kingNotInCheck()){//king not in check
+          //short castling
+          if(dx == 2 && Empty(7, 5) && Empty(7, 6) //empty places between king & rook
+            && notMoved(7, 7) && moveValidForChecks() //rook didn't move before & no check in the pass of king
+            && board(7)(7)(1) == 'r'){ //rook not in grav
+            return true
+          }
+          //long castling
+          else if(dx == -2 && Empty(7, 3) && Empty(7, 2) && Empty(7, 1) //empty places between king & rook
+            && notMoved(7, 0) && moveValidForChecks() //rook didn't move before & no check in the pass of king
+            && board(7)(0)(1) == 'r'){ //rook not in grav
+            return true
+          }
+        }
+      }
+      //black king in K{0,4}
+      else if(!turn && dx.abs == 2 && dy == 0 && notMoved(0, 4)){//king didn't move before
+        if(kingNotInCheck()){//king not in check
+          //short castling
+          if(dx == 2 && Empty(0, 5) && Empty(0, 6) //empty places between king & rook
+            && notMoved(0, 7) && moveValidForChecks() //rook didn't move before & no check in the pass of king
+            && board(0)(7)(1) == 'R'){ //rook not in grav
+            return true
+          }
+          //long castling
+          else if(dx == -2 && Empty(0, 3) && Empty(0, 2) && Empty(0, 1) //empty places between king & rook
+            && notMoved(0, 0) && moveValidForChecks() //rook didn't move before & no check in the pass of king
+            && board(0)(0)(1) == 'R'){ //rook not in grav
+            return true
+          }
+        }
+      }
+      false
+    }
     def validPawnMove(): Boolean = {
       val (dx, dy) = (tc - fc, tr - fr)
       if(( turn && tr == 0 && input.length() != 5)
-      || (!turn && tr == 7 && input.length() != 5)){ // a check to prevent moving to last square without promotion
+        || (!turn && tr == 7 && input.length() != 5)){ // a check to prevent moving to last square without promotion
         return false
       }
       //Pawn kill
       if(( turn && dx.abs == 1 && dy == -1)
-      || (!turn && dx.abs == 1 && dy ==  1)){
+        || (!turn && dx.abs == 1 && dy ==  1)){
         if ( !Ally(board(tr)(tc)(1)) ){
           true
         } else{
           false
         }
       }else{ // normal move
-        if ( !Empty(board(tr)(tc)(1)) && !Ally(board(tr)(tc)(1))){//making normal move doesn't kill
+        if ( !Empty(tr, tc) && !Ally(board(tr)(tc)(1))){//making normal move doesn't kill
           return false
         }
         if ( turn && fr == 6 || !turn && fr == 1){ //the initial position
@@ -107,7 +141,7 @@ object Chess extends App{
           }
         } else{ // not in initial position
           if(( turn && dy == -1 && dx == 0)
-          || (!turn && dy ==  1 && dx == 0)){
+            || (!turn && dy ==  1 && dx == 0)){
             true
           } else{
             false
@@ -121,34 +155,33 @@ object Chess extends App{
       // rook jumping
       if (dx > 0){ // right move
         for (i<- fc + 1 until tc) {
-          if ( !Empty(board(fr)(i)(1)) ){ // not empty
+          if ( !Empty(fr, i) ){ // not empty
             return false
           }
         }
       }
       else if (dx < 0) {//left move
         for (i<- fc-1 to tc+1 by -1) {
-          if ( !Empty(board(fr)(i)(1)) ){ // not empty
+          if ( !Empty(fr, i) ){ // not empty
             return false
           }
         }
       }
       else if ( dy < 0 ){// up move decrease in y
         for (i<- fr-1 to tr+1 by -1) { // I= 6
-          if ( !Empty(board(i)(fc)(1)) ){ // not empty
+          if ( !Empty(i, fc) ){ // not empty
             return false
           }
         }
       }
       else if (dy > 0){// down move increase in y
         for (i<- fr + 1 until tr) {
-          if ( !Empty(board(i)(fc)(1)) ){ // not empty
+          if ( !Empty(i, fc) ){ // not empty
             return false
           }
         }
       }
       true
-
     }
     def notBishopJump(): Boolean = {
       val dy = tr - fr
@@ -158,7 +191,7 @@ object Chess extends App{
       if (dx > 0 && dy < 0){// dx+ dy-  up right move
         ix = fc+1; iy = fr-1
         while(ix < tc){
-          if ( !Empty(board(iy)(ix)(1)) ){ // not empty
+          if ( !Empty(iy, ix) ){ // not empty
             return false
           }
           ix += 1; iy -= 1
@@ -167,7 +200,7 @@ object Chess extends App{
       else if (dx > 0 && dy > 0){// dx+ dy+  down right move
         ix = fc+1; iy = fr+1
         while(ix < tc){
-          if ( !Empty(board(iy)(ix)(1)) ){ // not empty
+          if ( !Empty(iy, ix) ){ // not empty
             return false
           }
           ix += 1; iy += 1
@@ -176,7 +209,7 @@ object Chess extends App{
       else if (dx < 0 && dy < 0){// dx- dy-  up left move
         ix = fc-1; iy = fr-1 ;
         while(ix > tc){
-          if ( !Empty(board(iy)(ix)(1)) ){ // not empty
+          if ( !Empty(iy, ix) ){ // not empty
             return false
           }
           ix -= 1; iy -= 1
@@ -185,7 +218,7 @@ object Chess extends App{
       else if (dx < 0 && dy > 0){// dx- dy+ down left move
         ix = fc-1; iy = fr+1
         while(ix > tc){
-          if ( !Empty(board(iy)(ix)(1)) ){ // not empty
+          if ( !Empty(iy, ix) ){ // not empty
             return false
           }
           ix -= 1; iy += 1
@@ -196,17 +229,17 @@ object Chess extends App{
     @tailrec
     def kingLocation(turn: Boolean, y: Int, x: Int): (Int, Int) = {
       if( turn && board(y)(x)(1) == 'k'
-      || !turn && board(y)(x)(1) == 'K') (y, x)
+        || !turn && board(y)(x)(1) == 'K') (y, x)
       else if(x < 7) kingLocation(turn, y, x+1)
       else if(x == 7 && y < 7) kingLocation(turn, y+1, 0)
       else (-1, -1)
     }
-    def findChecks(): Unit= {
-      wcheck = 0; bcheck = 0
+    def kingNotInCheck(): Boolean = {
+      var wcheck = 0; var bcheck = 0
       val (y, x) = kingLocation(turn, 0, 0)
-      println(s"King = '${board(y)(x)(1)}' in $y-$x")
+      //println(s"King = '${board(y)(x)(1)}' in $y-$x")
       val directions = Array(Array(-1, 0),Array(0, -1),Array(1, 0),Array(0, 1),   //4 rook directions(orthogonal)
-                             Array(-1,-1),Array(-1, 1),Array(1,-1),Array(1, 1));  //4 bishop directions(diagonal)
+        Array(-1,-1),Array(-1, 1),Array(1,-1),Array(1, 1));  //4 bishop directions(diagonal)
       var next_y = 0; var next_x = 0
       var next_square = ' '
       for(i<- board.indices){
@@ -227,14 +260,13 @@ object Chess extends App{
                 break()
               }
             }
-            else if(!Empty(next_square) && !Ally(next_square)){ //enemy case
-              println(s"enemy = $next_square in $next_y-$next_x")
+            else if(!Empty(next_y, next_x) && !Ally(next_square)){ //enemy case
               if((0 <= i && i <= 3 && next_square.toLower == 'r') //rook in orthogonal direction
-              || (4 <= i && i <= 7 && next_square.toLower == 'b') //bishop in diagonal direction
-              || (next_square.toLower == 'q') //queen in any direction
-              //pawn in his attacking position
-              || (j == 1 && next_square.toLower == 'p' && ((next_square == 'p' && 6 <= i && i <= 7) || (next_square == 'P' && 4 <= i && i <= 5)))
-              || (j == 1 && next_square.toLower == 'k')){ //the other king
+                || (4 <= i && i <= 7 && next_square.toLower == 'b') //bishop in diagonal direction
+                || (next_square.toLower == 'q') //queen in any direction
+                //pawn in his attacking position
+                || (j == 1 && next_square.toLower == 'p' && ((next_square == 'p' && 6 <= i && i <= 7) || (next_square == 'P' && 4 <= i && i <= 5)))
+                || (j == 1 && next_square.toLower == 'k')){ //the other king
                 if(pin(0) == -1){
                   if(turn){ //white king in check
                     wcheck += 1
@@ -257,7 +289,7 @@ object Chess extends App{
       }
       //knight causing a check (has special moves)
       val knight_moves = Array(Array(-1, -2), Array(-1, 2), Array(1, -2), Array(1, 2),
-                               Array(-2, -1), Array(-2, 1), Array(2, -1), Array(2, 1))
+        Array(-2, -1), Array(-2, 1), Array(2, -1), Array(2, 1))
       for(i<- board.indices){
         next_y = y + knight_moves(i)(0)
         next_x = x + knight_moves(i)(1)
@@ -273,20 +305,22 @@ object Chess extends App{
           }
         }
       }
-      println(s"checks: w=$wcheck, b=$bcheck")
+      //println(s"checks: w=$wcheck, b=$bcheck")
+      if(turn && wcheck == 0 || !turn && bcheck == 0) true //no checks, then true
+      else false
     }
     def moveValidForChecks(): Boolean = {
       val temp = board(tr)(tc)(1)
+      //do move
       board(tr)(tc) = s"${board(tr)(tc)(0)}${board(fr)(fc)(1)}"
       board(fr)(fc) = s"${board(fr)(fc)(0)} "
-      findChecks() //see if the move will not cause a check or will remove the check(if any)
+      //see if the move will not cause a check or will remove the check(if any)
+      val valid = kingNotInCheck()
       //undo move
       board(fr)(fc) = s"${board(fr)(fc)(0)}${board(tr)(tc)(1)}"
       board(tr)(tc) = s"${board(tr)(tc)(0)}$temp"
-      if(wcheck > 0 && turn || bcheck > 0 && !turn)
-        false
-      else
-        true
+      if(valid) true
+      else false
     }
     /* Validator */
     def validMove(): Boolean = {
@@ -295,7 +329,7 @@ object Chess extends App{
       val dy = tr - fr //difference between rows (Vertical)
       val dx = tc - fc //difference between cols (Horizontal)
       if(from.isUpper && turn || from.isLower && !turn //playing with other player's pieces
-        || !Empty(to) && Ally(to) || Empty(from)){ //hitting an ally || moving nothing
+        || !Empty(tr, tc) && Ally(to) || Empty(fr, fc)){ //hitting an ally || moving nothing
         false
       }
       /**
@@ -309,15 +343,16 @@ object Chess extends App{
             if ( validPawnMove() && (turn && tr == 0 || !turn && tr == 7)){
               //convert the promoted pawn
               board(fr)(fc) = if(turn) s"${board(fr)(fc)(0)}${piece.toLower}"
-                              else     s"${board(fr)(fc)(0)}${piece.toUpper}"
+              else     s"${board(fr)(fc)(0)}${piece.toUpper}"
               if(moveValidForChecks()){
-                promotion = true
+                promotionInfo(0) = 'T'
+                promotionInfo(1) = piece
                 true
               }
               else{
                 //undo promotion
                 board(fr)(fc) = if(turn) s"${board(fr)(fc)(0)}p"
-                                else     s"${board(fr)(fc)(0)}P"
+                else     s"${board(fr)(fc)(0)}P"
                 false
               }
             }
@@ -372,9 +407,9 @@ object Chess extends App{
           //if king goes to other king's region
           val (ky, kx) = kingLocation(!turn, 0, 0) //get the "other" king location
           if((tr, tc) == (ky, kx-1) || (tr, tc) == (ky-1, kx-1)
-          || (tr, tc) == (ky-1, kx) || (tr, tc) == (ky-1, kx+1)
-          || (tr, tc) == (ky, kx+1) || (tr, tc) == (ky+1, kx+1)
-          || (tr, tc) == (ky+1, kx) || (tr, tc) == (ky+1, kx-1)){
+            || (tr, tc) == (ky-1, kx) || (tr, tc) == (ky-1, kx+1)
+            || (tr, tc) == (ky, kx+1) || (tr, tc) == (ky+1, kx+1)
+            || (tr, tc) == (ky+1, kx) || (tr, tc) == (ky+1, kx-1)){
             false
           }
           else{
@@ -382,12 +417,30 @@ object Chess extends App{
           }
         }
         //Castling ...
+        else if(castlingMove() && moveValidForChecks()){
+          val ty = if(turn) 7 else 0 //get the row index of castling
+          if(dx == 2){ //short castling
+            board(ty)(5) = s"${board(ty)(5)(0)}${board(ty)(7)(1)}"
+            board(ty)(7) = s"${board(ty)(7)(0)} "
+          }
+          else if(dx == -2){ //long castling
+            board(ty)(3) = s"${board(ty)(3)(0)}${board(ty)(0)(1)}"
+            board(ty)(0) = s"${board(ty)(0)(0)} "
+          }
+          true
+        }
         else false
       }
-      else
-        false
+      else false
     }
     def performMove(): Unit = {
+      //mark the square of the kings or the rooks if anyone of them moved for the first time
+      //For castling
+      if((board(fr)(fc)(1).toLower == 'k' || board(fr)(fc)(1).toLower == 'r')
+        && notMoved(fr, fc)){
+        board(fr)(fc) = if(board(fr)(fc)(0) == '-') s"_${board(fr)(fc)(1)}"
+        else                        s",${board(fr)(fc)(1)}"
+      }
       //Doing the move
       board(tr)(tc) = s"${board(tr)(tc)(0)}${board(fr)(fc)(1)}"
       board(fr)(fc) = s"${board(fr)(fc)(0)} "
@@ -395,17 +448,25 @@ object Chess extends App{
 
     /* The controller sequence */
     val valid = matchInput(input)
-    if(valid) { performMove(); true }
-    else      { false }
+    if(valid) {
+      performMove()
+      if(!promotionInfo(0).isSpaceChar){ //if promotion happens
+        println(s"\nPawn got promoted to '${promotionInfo(1)}'. Nice job!")
+      }
+      true
+    }
+    else false
   }
 
+  /* Test Code Just for debugging */
   var turn = true
   var input = ""
-  /* The Game Loop. */
+  //The Game Loop.
   while(true){
     ChessDrawer(board)
-    print(if(turn) "Player 1's turn!" else "Player 2's turn!")
+    print(if(turn) "White's turn!" else "Black's turn!")
     input = readLine(" Enter the move: ")
+    //wrong input loop
     while(!ChessController(board, input, turn)){
       input = readLine("Invalid move! Enter the move: ")
     }
