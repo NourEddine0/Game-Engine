@@ -11,7 +11,7 @@ object Chess extends App{
     Array("- ",". ","- ",". ","- ",". ","- ",". "),
     Array(". ","- ",". ","- ",". ","- ",". ","- "),
     Array("-p",".p","-p",".p","-p",".p","-p",".p"),
-    Array(".r","-n",".b","-q",".k","-b",".n",".r") )
+    Array(".r","-n",".b","-q",".k","-b",".n","-r") )
 
   def getDrawer: Array[Array[String]] => Unit = ChessDrawer
   def getController: (Array[Array[String]], String, Boolean) => Boolean = ChessController
