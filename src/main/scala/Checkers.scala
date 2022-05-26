@@ -148,7 +148,7 @@ object Checkers extends App {
 						Board(x1-1)(y1-1) = s"${Board(x1-1)(y1-1)(0)} "
 				}
 			}
-			else if (!turn || king){
+			if (!turn || king && !valid){
 				if (rightDownMove && (x2-x1, y2-y1) == (2, 2) || leftDownMove && (x2-x1, y2-y1) == (2, -2)) {
 					Board(x2)(y2)= Board(x1)(y1)
 					Board(x1)(y1) = s"${Board(x1)(y1)(0)} "
@@ -161,17 +161,17 @@ object Checkers extends App {
 				}
 			}
 			
-			if (turn && !rightUpMove && !leftUpMove && (x2-x1, Math.abs(y2-y1)) == (-1, 1)){
+			if (turn && !valid && (x2-x1, Math.abs(y2-y1)) == (-1, 1) && x2 > -1 && x2 < 8 && y2 > -1 && y2 < 8){
 				Board(x2)(y2)= Board(x1)(y1)
 				Board(x1)(y1) = s"${Board(x1)(y1)(0)} "
 				valid = true
 			}
-			else if (!turn && !rightDownMove && !leftDownMove && (x2-x1, Math.abs(y2-y1)) == (1, 1)){
+			else if (!turn && !valid && (x2-x1, Math.abs(y2-y1)) == (1, 1)&& x2 > -1 && x2 < 8 && y2 > -1 && y2 < 8){
 				Board(x2)(y2) = Board(x1)(y1)
 				Board(x1)(y1) = s"${Board(x1)(y1)(0)} "
 				valid = true
 			}
-			else if (king && !rightDownMove && !leftDownMove && !rightUpMove && !leftUpMove && (Math.abs(x2-x1), Math.abs(y2-y1)) == (1, 1)){
+			else if (king && !valid && (Math.abs(x2-x1), Math.abs(y2-y1)) == (1, 1) && x2 > -1 && x2 < 8 && y2 > -1 && y2 < 8){
 				Board(x2)(y2)= Board(x1)(y1)
 				Board(x1)(y1) = s"${Board(x1)(y1)(0)} "
 				valid = true
@@ -188,8 +188,8 @@ object Checkers extends App {
 			if (valid){
 				val (moved, kill) = checkMovement(x1, y1, x2, y2)
 				valid = moved
-				if (x2 == 7 && valid) Board(x2)(y2) =  s"${Board(x2)(y2)(0)}k"
-				else if (x2 == 0 && valid) Board(x2)(y2) =  s"${Board(x2)(y2)(0)}K"
+				if (x2 == 7 && valid) Board(x2)(y2) =  s"${Board(x2)(y2)(0)}K"
+				else if (x2 == 0 && valid) Board(x2)(y2) =  s"${Board(x2)(y2)(0)}k"
 				cont = valid && kill && checkCapturePosition(x2, y2)
 				
 			}
