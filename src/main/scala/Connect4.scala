@@ -1,12 +1,12 @@
 object Connect4 {
     var Board :Array[Array[String]]=Array(
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○")
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O")
     )
   def getBoard: Array[Array[String]] = Board
   def getDrawer: Array[Array[String]] =>Unit = {
@@ -45,17 +45,23 @@ object Connect4 {
         if (f<1 || f>7) {
               false
         } else{
-          if(board(f-1)(5)!="○"){
+          if(board(f-1)(5)!="O"){
              false
           }else{
             var free=0
-            while(board(f-1)(free) != "○") {
+            while(board(f-1)(free) != "O") {
               free +=1
             }
             if(player)
+<<<<<<< HEAD
               board(f-1)(free)=Console.BLUE+"⬤"+Console.RESET
             else
                board(f-1)(free)= Console.YELLOW+"⬤"+Console.RESET
+=======
+              board(f-1)(free)=Console.BLUE+"O"+Console.RESET
+            else
+               board(f-1)(free)= Console.YELLOW+"O"+Console.RESET
+>>>>>>> d43ca7ea58feeab1f10ec55eae04ea1593173cf2
             true
           }
         }
