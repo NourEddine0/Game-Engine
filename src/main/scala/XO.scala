@@ -45,7 +45,7 @@ object XO {
 			def matchInput(in: String): Boolean = in match {
 				case pattern(_*) => {
 					index1 = '3' - in(0);
-					index2 = in(1) - 'a';
+					index2 = in(1).toLower - 'a';
 					true
 				}
 				case _ => false
