@@ -1,15 +1,15 @@
 object Connect4 {
     var Board :Array[Array[String]]=Array(
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○"),
-      Array("○","○","○","○","○","○")
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O"),
+      Array("O","O","O","O","O","O")
     )
-
-    def getDrawer: Array[Array[String]] =>Unit = {
+  def getBoard: Array[Array[String]] = Board
+  def getDrawer: Array[Array[String]] =>Unit = {
       (board: Array[Array[String]]) => {
         var x = 1
         while (x<8) {
@@ -32,9 +32,9 @@ object Connect4 {
     }
 
 
-  def getController:(Array[Array[String]],String,Int) => Boolean = {
+  def getController:(Array[Array[String]],String,Boolean) => Boolean = {
 
-    (board: Array[Array[String]], input: String,player:Int) => {
+    (board: Array[Array[String]], input: String,player:Boolean) => {
         var f=0
         try {
           f = input.toInt
@@ -45,44 +45,20 @@ object Connect4 {
         if (f<1 || f>7) {
               false
         } else{
-          if(board(f-1)(5)!="○"){
+          if(board(f-1)(5)!="O"){
              false
           }else{
             var free=0
-            while(board(f-1)(free) != "○") {
+            while(board(f-1)(free) != "O") {
               free +=1
             }
-            if(player==1)
-              board(f-1)(free)= "●"
+            if(player)
+              board(f-1)(free)=Console.BLUE+"O"+Console.RESET
             else
-               board(f-1)(free)= "◍"
+               board(f-1)(free)= Console.YELLOW+"O"+Console.RESET
             true
           }
         }
     }
   }
-
-  def main(args: Array[String]): Unit ={
-    var Board=Connect4.Board
-    def drawer=Connect4.getDrawer
-    drawer(Board)
-    def controller=Connect4.getController
-    println(getController(Board,"1",0))
-    drawer(Board)
-    println(getController(Board,"1",1))
-    drawer(Board)
-    println(getController(Board,"1",0))
-    drawer(Board)
-    println(getController(Board,"1",1))
-    drawer(Board)
-    println(getController(Board,"11",0))
-    drawer(Board)
-    println(getController(Board,"1",1))
-    drawer(Board)
-    println(getController(Board,"foo",1))
-    drawer(Board)
-
-  }
-
-
 }

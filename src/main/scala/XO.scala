@@ -2,20 +2,29 @@ import scala.io.StdIn.readLine
 import scala.util.matching.Regex
 import java.util.Scanner
 
-object XO extends  App {
-	def getDrawer: Array[Array[Char]] => Unit = XODrawer;
-	def getController:(Array[Array[Char]], String, Boolean) => Boolean = XOController;
-	def getBoard():Array[Array[Char]] ={
-		var Board = Array.ofDim[Char](3, 3);
+
+object XO {
+	def getDrawer: Array[Array[String]] => Unit = XODrawer;
+	def getController:(Array[Array[String]], String, Boolean) => Boolean = XOController;
+	def getBoard():Array[Array[String]] ={
+		var Board = Array.ofDim[String](3, 3);
+		def resetBoard(): Unit = {
+			for (i <- 0 until Board.length) {
+				for (j <- 0 until Board.length) {
+					Board(i)(j) = " ";
+				}
+			}
+		}
+		resetBoard()
 		return Board;
 	} ; //The Board
-	def XODrawer(board: Array[Array[Char]]): Unit = {
+	def XODrawer(board: Array[Array[String]]): Unit = {
 		/* Prints the whole board with its content in a square format. */
-		def printBoard(b: Array[Array[Char]]): Unit = {
+		def printBoard(b: Array[Array[String]]): Unit = {
 		println("    a   b   c")
-		for(i <- 0 to b.length - 1){
+		for(i <- 0 until b.length){
 			print(s"${b.length - i} | ")
-			for(j<- 0 to b.length - 1){
+			for(j<- 0 until b.length){
 			print(s"${b(i)(j)} | ")
 			}
 			println(s"${b.length - i}")
@@ -25,15 +34,9 @@ object XO extends  App {
 		printBoard (board)
 	}
 
-  	def XOController(board: Array[Array[Char]], input:String, turn:Boolean): Boolean = {
+  	def XOController(board: Array[Array[String]], input:String, turn:Boolean): Boolean = {
 			/* Resets the board to be empty for the next game. */
-			def resetBoard(): Unit = {
-				for (i <- 0 to board.length - 1) {
-					for (j <- 0 to board.length - 1) {
-						board(i)(j) = ' ';
-					}
-				}
-			}
+
 			val pattern = "([1-3])([a-cA-C])".r     /* Input Regex pattern */
 			var index1 = 0;             /* The parsed user input. */
 			var index2 = 0;
@@ -51,7 +54,7 @@ object XO extends  App {
 				then reEnter the input. */
 
 			if (!(matchInput(input))
-				|| board(index1)(index2).toString.matches("X|O")) {
+				|| board(index1)(index2).toString.matches("Console.RED+\"X\"+Console.RESET|Console.GREEN+\"O\"+Console.RESET")) {
 				/* Performing the action. */
 				println("Invalid input")
 				false;
@@ -59,7 +62,7 @@ object XO extends  App {
 
 			}
 			else{
-				board(index1)(index2) = if (turn) 'X' else 'O'
+				board(index1)(index2) = if (turn) Console.RED+"X"+Console.RESET else Console.GREEN+"O"+Console.RESET
 				true
 			}
 		}

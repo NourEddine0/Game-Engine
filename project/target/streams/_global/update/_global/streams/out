@@ -1,3 +1,4 @@
 [debug] not up to date. inChanged = true, force = false
-[debug] Updating ProjectRef(uri("file:/E:/study/second%20term-second%20year/paradim/project/lastinte/Game-Engine/project/"), "game-engine-build")...
-[debug] Done updating ProjectRef(uri("file:/E:/study/second%20term-second%20year/paradim/project/lastinte/Game-Engine/project/"), "game-engine-build")
+[debug] Updating ProjectRef(uri("file:/D:/Study%20Stuff/Year%202/2nd%20Semester/Programming%20Paradigms/Assignments/Assignment%203/Game-Engine/project/"), "game-engine-build")...
+[warn] Unrecognized repository Scala Plugin Bundled Repository, ignoring it
+[debug] Done updating ProjectRef(uri("file:/D:/Study%20Stuff/Year%202/2nd%20Semester/Programming%20Paradigms/Assignments/Assignment%203/Game-Engine/project/"), "game-engine-build")

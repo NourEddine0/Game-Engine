@@ -1,6 +1,6 @@
 import scala.io.StdIn.readLine
 
-object Checkers extends App {
+object Checkers{
 	
 	var board :Array[Array[String]] = Array(
 		Array("- ", ".O", "- ", ".O", "- ", ".O", "- ", ".O"),
@@ -213,16 +213,4 @@ object Checkers extends App {
 		else true
 	}
 
-	var turn = true
-	var input = ""
-	/* The Game Loop. */
-	while(true){
-		CheckersDrawer(board)
-		print(if(turn) "Player 1's turn!" else "Player 2's turn!")
-		input = readLine(" Enter the move: ")
-		while(!CheckersController(board, input, turn)){
-			input = readLine("Invalid move! Enter the move: ")
-		}
-		turn = !turn
-	}
 }

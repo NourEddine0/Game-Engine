@@ -1,8 +1,10 @@
-class Engine(val Controller: (Array[Array[Char]], String, Boolean) => Boolean ,
-             val Drawer: (Array[Array[Char]]) => Unit, val Board: Array[Array[Char]]) extends App{
+
+class Engine(val Controller: (Array[Array[String]], String, Boolean) => Boolean ,
+             val Drawer: (Array[Array[String]]) => Unit, val Board: Array[Array[String]]) extends App{
 
 
   def startGame{
+      this.Drawer(this.Board)
       var turn = true
       while (true){
         println(if(turn) "Player 1's turn!" else "Player 2's turn!")
