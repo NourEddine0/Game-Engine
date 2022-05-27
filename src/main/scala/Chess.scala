@@ -2,7 +2,7 @@ import scala.annotation.tailrec
 import scala.io.StdIn.readLine
 import scala.util.control.Breaks._
 
-object Chess extends App{
+object Chess {
   var board = Array(
     Array("-R",".N","-B",".Q","-K",".B","-N",".R"),
     Array(".P","-P",".P","-P",".P","-P",".P","-P"),
@@ -456,20 +456,5 @@ object Chess extends App{
       true
     }
     else false
-  }
-
-  /* Test Code Just for debugging */
-  var turn = true
-  var input = ""
-  //The Game Loop.
-  while(true){
-    ChessDrawer(board)
-    print(if(turn) "White's turn!" else "Black's turn!")
-    input = readLine(" Enter the move: ")
-    //wrong input loop
-    while(!ChessController(board, input, turn)){
-      input = readLine("Invalid move! Enter the move: ")
-    }
-    turn = !turn
   }
 }
