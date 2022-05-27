@@ -53,15 +53,9 @@ object Connect4 {
               free +=1
             }
             if(player)
-<<<<<<< HEAD
-              board(f-1)(free)=Console.BLUE+"⬤"+Console.RESET
+              board(f-1)(free)=Console.BLUE+"0"+Console.RESET
             else
-               board(f-1)(free)= Console.YELLOW+"⬤"+Console.RESET
-=======
-              board(f-1)(free)=Console.BLUE+"O"+Console.RESET
-            else
-               board(f-1)(free)= Console.YELLOW+"O"+Console.RESET
->>>>>>> d43ca7ea58feeab1f10ec55eae04ea1593173cf2
+               board(f-1)(free)= Console.YELLOW+"0"+Console.RESET
             true
           }
         }
