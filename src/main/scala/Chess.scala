@@ -1,9 +1,8 @@
 import scala.annotation.tailrec
-import scala.io.StdIn.readLine
 import scala.util.control.Breaks._
 
 object Chess {
-  var board = Array(
+  var board: Array[Array[String]] = Array(
     Array("-R",".N","-B",".Q","-K",".B","-N",".R"),
     Array(".P","-P",".P","-P",".P","-P",".P","-P"),
     Array("- ",". ","- ",". ","- ",". ","- ",". "),
@@ -123,10 +122,10 @@ object Chess {
       //Pawn kill
       if(( turn && dx.abs == 1 && dy == -1)
         || (!turn && dx.abs == 1 && dy ==  1)){
-        if ( !Ally(board(tr)(tc)(1)) ){
-          true
-        } else{
-          false
+          if ( !Empty(tr, tc) && !Ally(board(tr)(tc)(1)) ){
+            true
+          } else{
+            false
         }
       }else{ // normal move
         if ( !Empty(tr, tc) && !Ally(board(tr)(tc)(1))){//making normal move doesn't kill
@@ -394,8 +393,6 @@ object Chess {
       }
       //Pawn
       else if(from.toLower == 'p'){
-        //En-passant...
-
         if(validPawnMove()){
           moveValidForChecks()
         }
@@ -446,7 +443,9 @@ object Chess {
       board(fr)(fc) = s"${board(fr)(fc)(0)} "
     }
 
-    /* The controller sequence */
+    /**
+     * The Controller Flow
+     */
     val valid = matchInput(input)
     if(valid) {
       performMove()

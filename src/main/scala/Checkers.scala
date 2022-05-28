@@ -1,5 +1,3 @@
-import scala.io.StdIn.readLine
-
 object Checkers{
 	
 	var board :Array[Array[String]] = Array(
