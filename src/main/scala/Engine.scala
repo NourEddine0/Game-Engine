@@ -1,25 +1,25 @@
+import scalafx.scene.control.Label
+import scalafx.scene.text.Text
 
 class Engine(val Controller: (Array[Array[String]], String, Boolean) => Boolean ,
              val Drawer: (Array[Array[String]]) => String, val Board: Array[Array[String]]) extends App{
 
   var turn = false
 
-  def validateMove(input:String): Unit ={
-    println(input)
-    val in = takeInput(input);
-    println(if(turn) "Player 1's turn!" else "Player 2's turn!")
-    if(in.isLeft) {
-      return
-    }
-    else {
-      if (this.Controller(this.Board, in.fold(l => "false", r=>r), turn)) {
+  def validateMove(input:String, gameStatus: Text, playerTurn: Text, turn:Boolean): Boolean ={
+
+    playerTurn.text = if (turn) "Player 1's turn!" else "Player 2's turn!"
+      var state = false
+      if (this.Controller(this.Board, input, turn)) {
         this.Drawer(this.Board)
-        turn = !turn
+        gameStatus.text = ""
+        state = true
       }
       else {
-        println("invalid move rejected")
+        gameStatus.text = "invalid move rejected"
+        state = false
       }
-    }
+    state
   }
   def startGame{
 

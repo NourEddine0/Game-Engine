@@ -1,3 +1,4 @@
+import java.nio.charset.Charset
 import scala.annotation.tailrec
 import scala.util.control.Breaks._
 
@@ -20,13 +21,13 @@ object Chess {
     /* Prints the whole board with its content in a square format. */
     def printBoard(b: Array[Array[String]]): String = {
       // Reset font color & background color
-      val RESET = "\u001b[0m" // Text Reset
+      val RESET = ""; // Text Reset
       // Bold font color
-      val BLACK_BOLD = "\u001b[1;30m"
-      val WHITE_BOLD_BRIGHT = "\u001b[1;97m"
+      val BLACK_BOLD = "";
+      val WHITE_BOLD_BRIGHT = "";
       // Background colors
-      val WHITE_BACKGROUND = "\u001b[47m"
-      val BLACK_BACKGROUND_BRIGHT = "\u001b[0;100m"
+      val WHITE_BACKGROUND = "";
+      val BLACK_BACKGROUND_BRIGHT = "";
       //setting colors
       val bg1 = WHITE_BACKGROUND //block color 1
       val bg2 = BLACK_BACKGROUND_BRIGHT //block color 2
@@ -60,7 +61,7 @@ object Chess {
       sb.append("    ")
       //print("    ")
       //print A to H below the board
-      List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach sb.append
+      List("A\t", "B\t", "C\t", "D\t", "E\t", "F\t", "G  ", "H\t") foreach sb.append
       sb.append("\n\t\tWhite Player")
       //println("\n\t\tWhite Player")
       var s = new String(sb.toString())

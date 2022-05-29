@@ -18,13 +18,13 @@ object Checkers{
 		/* Prints the whole board with its content in a square format. */
 		def printBoard(b: Array[Array[String]]): String = {
 			// Reset font color & background color
-			val RESET = "\u001b[0m" // Text Reset
+			val RESET = ""; // Text Reset
 			// Bold font color
-			val BLACK_BOLD = "\u001b[1;30m"
-			val WHITE_BOLD_BRIGHT = "\u001b[1;97m"
+			val BLACK_BOLD = "";
+			val WHITE_BOLD_BRIGHT = "";
 			// Background colors
-			val WHITE_BACKGROUND = "\u001b[47m"
-			val BLACK_BACKGROUND_BRIGHT = "\u001b[0;100m"
+			val WHITE_BACKGROUND = " ";
+			val BLACK_BACKGROUND_BRIGHT = " ";
 			//setting colors
 			val bg1 = WHITE_BACKGROUND //block color 1
 			val bg2 = BLACK_BACKGROUND_BRIGHT //block color 2
@@ -40,7 +40,7 @@ object Checkers{
 			sb.append("    ");
 			//print("    ")
 			//print A to H above the board
-			List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach sb.append
+			List("A\t", "B\t", "C\t", "D\t", "E\t", "F\t", "G\t", "H\t") foreach sb.append
 			sb.append("\n")
 			//println()
 			for(i<- b.indices){
@@ -48,7 +48,7 @@ object Checkers{
 				print(s"${8-i}  " + bg1);  //print 1 to 8 on the left side
 				for(j<- b.indices){
 					sb.append(s"${if(b(i)(j)(0) == '-') bg1 else bg2}" +
-						s" ${if(b(i)(j)(1).isLower) p1 else p2}${b(i)(j)(1)} ")
+						s"${b(i)(j)(1)}\t")
 					/*print(s"${if(b(i)(j)(0) == '-') bg1 else bg2}" +
 						s" ${if(b(i)(j)(1).isLower) p1 else p2}${b(i)(j)(1)} ")*/
 				}
@@ -58,7 +58,7 @@ object Checkers{
 			sb.append("    ")
 			print("    ")
 			//print A to H below the board
-			List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach sb.append
+			List("A\t", "B\t", "C\t", "D\t", "E\t", "F\t", "G\t", "H\t") foreach sb.append
 			sb.append("\n\t\tWhite Player (1)")
 			println("\n\t\tWhite Player (1)")
 			var s = new String(sb.toString())

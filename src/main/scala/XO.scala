@@ -14,19 +14,19 @@ object XO {
 		/* Prints the whole board with its content in a square format. */
 		def printBoard(b: Array[Array[String]]): String = {
       var sb = new StringBuilder
-      sb.append("  a   b   c\n");
+      sb.append("\t\ta\t\tb\t\tc\n");
 		//println("    a   b   c")
 		for(i <- b.indices){
-			sb.append(s"${b.length - i} |");
+			sb.append(s"${b.length - i}\t|\t");
 			//print(s"${b.length - i} | ")
 			for(j<- b.indices){
-				sb.append(s"${b(i)(j)} |")
+				sb.append(s"${b(i)(j)}\t|\t")
 			//print(s"${b(i)(j)} | ")
 			}
 			sb.append(s"${b.length - i}\n");
 			//println(s"${b.length - i}")
 		}
-			sb.append("    a b c\n")
+			sb.append("\t\ta\t\tb\t\tc\n");
 		//println("    a   b   c")
 			var s = new String(sb.toString());
 			return s;
@@ -36,7 +36,7 @@ object XO {
 
 	def XOController(board: Array[Array[String]], input:String, turn:Boolean): Boolean = {
 		val pattern = "([1-3])([a-c|A-C])".r     /* Input Regex pattern */
-		val XO_pattern = "(\\u001B\\[\\d+m)+(X)(\\u001B\\[\\d+m)+|(\\u001B\\[\\d+m)+(O)(\\u001B\\[\\d+m)+"
+		val XO_pattern = "(X)+(X)|(○)+(O)"
 		var index1 = 0;             /* The parsed user input. */
 		var index2 = 0
 		/* Detects the matching of the input & returns a boolean value according
@@ -79,7 +79,7 @@ object XO {
 			false
 		}
 		else{ /* Performing the action. */
-			board(index1)(index2) = if (turn) Console.RED+"X"+Console.RESET else Console.GREEN+"O"+Console.RESET
+			board(index1)(index2) = if (turn) "X"  else "○"
 			true
 		}
 	}

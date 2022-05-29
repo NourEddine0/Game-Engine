@@ -1,13 +1,12 @@
 import Launcher.stage
-import ScalaFXHelloWorld.stage
 import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, TextField}
+import scalafx.scene.control.{Button, Label, TextField}
 import scalafx.event.ActionEvent
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.layout.HBox
-import scalafx.scene.paint.Color.{DarkGray, DarkRed, Red, White}
+import scalafx.scene.paint.Color.{Black, DarkGray, DarkRed, Red, White}
 import scalafx.scene.paint.{Color, LinearGradient, Stops}
 import scalafx.scene.text.Text
 
@@ -111,41 +110,67 @@ override def start(): Unit ={
   }*/
 
   stage = new JFXApp3.PrimaryStage {
+
     title = "Game Launcher"
-    scene = new Scene (1000,750){
-      //fill = Color.rgb(38, 38, 38)
+    scene = new Scene (1000,500){
+
       var controller: Engine = getController
       val engine: Engine = controller;/*controller(engine);*/
 
 
 
-          var text1: Text = new Text {
-            text = engine.Drawer(engine.Board);
-            style = "-fx-font: normal bold 10pt sans-serif"
+      var board = new Text {
+            text = engine.Drawer(engine.Board)
             fill = new LinearGradient(
               endX = 0,
               stops = Stops(Red, DarkRed))
           };
-      text1.layoutX = 300
-      text1.layoutY = 100
-          var text2: TextField = new TextField {
+      board.layoutX = 300
+      board.layoutY = 100
+
+      val label = new Label("Move")
+
+      var playerTurn= new Text("Player 1's turn!") {
+        fill = new LinearGradient(
+          endX = 0,
+          stops = Stops(Black, DarkGray)
+        )
+      };
+      playerTurn.layoutX = 10
+      playerTurn.layoutY = 450
+      playerTurn.style = "-fx-font: italic bold 10pt"
+
+      var userInput: TextField = new TextField {
             promptText = "Enter your move"
             fill = new LinearGradient(
               endX = 0,
               stops = Stops(White, DarkGray)
             )
           };
-      text2.layoutX = 0
-      text2.layoutY = 203
-      val button: Button = new Button {
-        text = "Move"
-        onAction = _ => {
-          var move = text2.text.value ;
-          engine.validateMove(move);
-          text1.text = engine.Drawer(engine.Board);
-        };
+      userInput.layoutX = 150
+      userInput.layoutY = 450
+
+      var gameStatus = new Text {
+        fill = new LinearGradient(
+          endX = 0,
+          stops = Stops(Black, DarkGray)
+        )
       };
-      content = List(text1, text2,button)
+      gameStatus.layoutX = 300
+      gameStatus.layoutY = 470
+      gameStatus.style = "-fx-font: italic bold 10pt sans-serif"
+
+      var turn = true;
+
+      userInput.onAction = (e)=>{
+        var move = userInput.text.value ;
+        if (engine.validateMove(move, gameStatus, playerTurn, turn)){
+          turn = !turn
+        }
+        board.text = engine.Drawer(engine.Board)
+
+      }
+      content = List(board, userInput, gameStatus, playerTurn)
   }
 }
 }

@@ -1,12 +1,12 @@
 object Connect4 {
     var Board :Array[Array[String]]=Array(
-      Array("O","O","O","O","O","O"),
-      Array("O","O","O","O","O","O"),
-      Array("O","O","O","O","O","O"),
-      Array("O","O","O","O","O","O"),
-      Array("O","O","O","O","O","O"),
-      Array("O","O","O","O","O","O"),
-      Array("O","O","O","O","O","O")
+      Array("▢","▢","▢","▢","▢","▢"),
+      Array("▢","▢","▢","▢","▢","▢"),
+      Array("▢","▢","▢","▢","▢","▢"),
+      Array("▢","▢","▢","▢","▢","▢"),
+      Array("▢","▢","▢","▢","▢","▢"),
+      Array("▢","▢","▢","▢","▢","▢"),
+      Array("▢","▢","▢","▢","▢","▢")
     )
   def getBoard: Array[Array[String]] = Board
 
@@ -16,7 +16,7 @@ object Connect4 {
     var x = 1;
     var sb = new StringBuilder
     while (x<8) {
-      sb.append(x + "  ")
+      sb.append(x + "  \t")
       //print(x + "  ")
       x +=1
     }
@@ -26,7 +26,7 @@ object Connect4 {
     while (f > -1) {
       var s = 0
       while (s < 7) {
-        sb.append(board(s)(f) + "  ")
+        sb.append(board(s)(f) + "  \t")
         //print(board(s)(f) + "  ")
         s += 1
       }
@@ -54,17 +54,17 @@ object Connect4 {
         if (f<1 || f>7) {
               false
         } else{
-          if(board(f-1)(5)!="O"){
+          if(board(f-1)(5)!="▢"){
              false
           }else{
             var free=0
-            while(board(f-1)(free) != "O") {
+            while(board(f-1)(free) != "▢") {
               free +=1
             }
             if(player)
-              board(f-1)(free)=Console.BLUE+"0"+Console.RESET
+              board(f-1)(free)= "◯"
             else
-               board(f-1)(free)= Console.YELLOW+"0"+Console.RESET
+               board(f-1)(free)= "⬤"
             true
           }
         }
