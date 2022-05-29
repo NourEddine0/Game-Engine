@@ -12,48 +12,43 @@ object Chess {
     Array("-p",".p","-p",".p","-p",".p","-p",".p"),
     Array(".r","-n",".b","-q",".k","-b",".n","-r") )
 
-  def getDrawer: Array[Array[String]] => Unit = ChessDrawer
+  def getDrawer: Array[Array[String]] => String = ChessDrawer
   def getController: (Array[Array[String]], String, Boolean) => Boolean = ChessController
   def getBoard: Array[Array[String]] = board
 
-  def ChessDrawer(board: Array[Array[String]]): Unit = {
-    /* Prints the whole board with its content in a square format. */
-    def printBoard(b: Array[Array[String]]): Unit = {
-      // Reset font color & background color
-      val RESET = "\u001b[0m" // Text Reset
-      // Bold font color
-      val BLACK_BOLD = "\u001b[1;30m"
-      val WHITE_BOLD_BRIGHT = "\u001b[1;97m"
-      // Background colors
-      val WHITE_BACKGROUND = "\u001b[47m"
-      val BLACK_BACKGROUND_BRIGHT = "\u001b[0;100m"
-      //setting colors
-      val bg1 = WHITE_BACKGROUND //block color 1
-      val bg2 = BLACK_BACKGROUND_BRIGHT //block color 2
-      val p1 = WHITE_BOLD_BRIGHT //player 1's pieces color
-      val p2 = BLACK_BOLD //player 2's pieces color
-      val reset = RESET
-      //print the chess board
-      println("\nThe Chess Board:")
-      println("\t\tBlack Player")
-      print("    ")
-      //print A to H above the board
-      List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach print
-      println()
-      for(i<- b.indices){
-        print(s"${8-i}  " + bg1);  //print 1 to 8 on the left side
-        for(j<- b.indices){
-          print(s"${if(b(i)(j)(0) == '-' || b(i)(j)(0) == '_') bg1 else bg2}" +
-            s" ${if(b(i)(j)(1).isLower) p1 else p2}${b(i)(j)(1)} ")
-        }
-        println(s"$reset  ${8-i}"); //print 1 to 8 on the right side
+  def ChessDrawer(board: Array[Array[String]]): String = {
+    // Reset font color & background color
+    val RESET = "\u001b[0m" // Text Reset
+
+    // Bold font color
+    val BLUE_BOLD = "\u001b[1;34m"
+    val RED_BOLD_BRIGHT = "\u001b[1;91m"
+    // Background colors
+    val WHITE_BACKGROUND_BRIGHT = "\u001b[0;107m"
+    val YELLOW_BACKGROUND_BRIGHT = "\u001b[0;103m"
+
+    //setting colors
+    val bg1 = WHITE_BACKGROUND_BRIGHT //block color 1
+    val bg2 = YELLOW_BACKGROUND_BRIGHT //block color 2
+    val p1 = BLUE_BOLD //player 1's pieces color
+    val p2 = RED_BOLD_BRIGHT //player 2's pieces color
+    val reset = RESET
+    //print the chess board
+    var boardString = ""
+    boardString += "\nThe Chess Board:\n" + "\tRed Player\n"
+    boardString += "    " + "A  B  C  D  E  F  G  H"
+    boardString += "\n"
+    for(i<- board.indices){
+      boardString += s"${8-i}  " + bg1
+      for(j<- board.indices){
+        boardString += s"${if(board(i)(j)(0) == '-' || board(i)(j)(0) == '_') bg1 else bg2}" +
+                      s" ${if(board(i)(j)(1).isLower) p1 else p2}${board(i)(j)(1)} "
       }
-      print("    ")
-      //print A to H below the board
-      List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach print
-      println("\n\t\tWhite Player")
+      boardString += s"$reset  ${8-i}\n"
     }
-    printBoard(board)
+    boardString += "    " + "A  B  C  D  E  F  G  H"
+    boardString += "\n\tBlue Player\n"
+    boardString
   }
 
   def ChessController(board: Array[Array[String]], input: String, turn: Boolean): Boolean =
@@ -456,4 +451,19 @@ object Chess {
     }
     else false
   }
+/*
+  /* Test Code Just for debugging */
+  var turn = true
+  var input = ""
+  //The Game Loop.
+  while(true){
+    print(ChessDrawer(board))
+    print(if(turn) "Blue's turn!" else "Red's turn!")
+    input = readLine(" Enter the move: ")
+    //wrong input loop
+    while(!ChessController(board, input, turn)){
+      input = readLine("Invalid move! Enter the move: ")
+    }
+    turn = !turn
+  }*/
 }

@@ -1,29 +1,23 @@
-
-
-
 object XO {
-	def getDrawer: Array[Array[String]] => Unit = XODrawer
-	def getController:(Array[Array[String]], String, Boolean) => Boolean = XOController
-	def getBoard:Array[Array[String]] = {
-		Array(Array(" ", " ", " "),
-					Array(" ", " ", " "),
-					Array(" ", " ", " "))
-	}
+	var board: Array[Array[String]] = Array(Array(" ", " ", " "),
+																					Array(" ", " ", " "),
+																					Array(" ", " ", " "))
 
-	def XODrawer(board: Array[Array[String]]): Unit = {
-		/* Prints the whole board with its content in a square format. */
-		def printBoard(b: Array[Array[String]]): Unit = {
-		println("    a   b   c")
-		for(i <- b.indices){
-			print(s"${b.length - i} | ")
-			for(j<- b.indices){
-			print(s"${b(i)(j)} | ")
+	def getDrawer: Array[Array[String]] => String = XODrawer
+	def getController:(Array[Array[String]], String, Boolean) => Boolean = XOController
+	def getBoard:Array[Array[String]] = board
+
+	def XODrawer(board: Array[Array[String]]): String = {
+		var boardString = "    a   b   c\n"
+		for(i <- board.indices){
+			boardString += s"${board.length - i} | "
+			for(j<- board.indices){
+				boardString += s"${board(i)(j)} | "
 			}
-			println(s"${b.length - i}")
+			boardString += s"${board.length - i}\n"
 		}
-		println("    a   b   c")
-		}
-		printBoard (board)
+		boardString += "    a   b   c\n"
+		boardString
 	}
 
 	def XOController(board: Array[Array[String]], input:String, turn:Boolean): Boolean = {
@@ -75,4 +69,19 @@ object XO {
 			true
 		}
 	}
+/*
+	/* Test Code Just for debugging */
+	var turn = true
+	var input = ""
+	//The Game Loop.
+	while(true) {
+		print(XODrawer(board))
+		print(if (turn) "X's turn!" else "O's turn!")
+		input = readLine(" Enter the slot: ")
+		//wrong input loop
+		while (!XOController(board, input, turn)) {
+			input = readLine("Invalid input! Enter the slot: ")
+		}
+		turn = !turn
+	}*/
 }
