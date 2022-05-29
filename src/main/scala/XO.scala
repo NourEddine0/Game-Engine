@@ -36,7 +36,7 @@ object XO {
 
 	def XOController(board: Array[Array[String]], input:String, turn:Boolean): Boolean = {
 		val pattern = "([1-3])([a-c|A-C])".r     /* Input Regex pattern */
-		val XO_pattern = "(X)+(X)|(○)+(O)"
+		val XO_pattern = "(X)|(○)"
 		var index1 = 0;             /* The parsed user input. */
 		var index2 = 0
 		/* Detects the matching of the input & returns a boolean value according

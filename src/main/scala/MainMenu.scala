@@ -31,12 +31,12 @@ object MainMenu extends JFXApp3{
   board
   }
   def MainMenuDrawer(board: Array[Array[String]]): Unit ={
-    println(Console.YELLOW+"---------------")
+    println("---------------")
     println("Game launcher")
-    println("---------------"+Console.RESET)
+    println("---------------")
 
     def printFunc(i:Int): Unit = if(board(i)(0).equals(">")){println(board(i)(1));}
-                          else{println(Console.GREEN+board(i)(1)+Console.RESET)}
+                          else{println(board(i)(1))}
     for(i <- board.indices){
      printFunc(i)
     }

@@ -8,12 +8,13 @@ class Engine(val Controller: (Array[Array[String]], String, Boolean) => Boolean 
 
   def validateMove(input:String, gameStatus: Text, playerTurn: Text, turn:Boolean): Boolean ={
 
-    playerTurn.text = if (turn) "Player 1's turn!" else "Player 2's turn!"
+
       var state = false
       if (this.Controller(this.Board, input, turn)) {
         this.Drawer(this.Board)
         gameStatus.text = ""
         state = true
+        playerTurn.text = if (!turn) "Player 1's turn!" else "Player 2's turn!"
       }
       else {
         gameStatus.text = "invalid move rejected"

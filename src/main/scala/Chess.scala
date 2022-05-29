@@ -113,10 +113,10 @@ object Chess {
       //Pawn kill
       if(( turn && dx.abs == 1 && dy == -1)
         || (!turn && dx.abs == 1 && dy ==  1)){
-          if ( !Empty(tr, tc) && !Ally(board(tr)(tc)(1)) ){
-            true
-          } else{
-            false
+        if ( !Empty(tr, tc) && !Ally(board(tr)(tc)(1)) ){
+          true
+        } else{
+          false
         }
       }else{ // normal move
         if ( !Empty(tr, tc) && !Ally(board(tr)(tc)(1))){//making normal move doesn't kill
@@ -124,7 +124,7 @@ object Chess {
         }
         if ( turn && fr == 6 || !turn && fr == 1){ //the initial position
           if(((dy == -1 || dy == -2) && dx == 0 && turn)
-          || ((dy ==  1 || dy ==  2) && dx == 0 && !turn)){
+            || ((dy ==  1 || dy ==  2) && dx == 0 && !turn)){
             true
           } else{
             false
