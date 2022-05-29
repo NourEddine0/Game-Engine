@@ -12,13 +12,13 @@ object Chess {
     Array("-p",".p","-p",".p","-p",".p","-p",".p"),
     Array(".r","-n",".b","-q",".k","-b",".n","-r") )
 
-  def getDrawer: Array[Array[String]] => Unit = ChessDrawer
+  def getDrawer: Array[Array[String]] => String = ChessDrawer
   def getController: (Array[Array[String]], String, Boolean) => Boolean = ChessController
   def getBoard: Array[Array[String]] = board
 
-  def ChessDrawer(board: Array[Array[String]]): Unit = {
+  def ChessDrawer(board: Array[Array[String]]): String = {
     /* Prints the whole board with its content in a square format. */
-    def printBoard(b: Array[Array[String]]): Unit = {
+    def printBoard(b: Array[Array[String]]): String = {
       // Reset font color & background color
       val RESET = "\u001b[0m" // Text Reset
       // Bold font color
@@ -34,26 +34,39 @@ object Chess {
       val p2 = BLACK_BOLD //player 2's pieces color
       val reset = RESET
       //print the chess board
-      println("\nThe Chess Board:")
-      println("\t\tBlack Player")
-      print("    ")
+      var sb = new StringBuilder
+      sb.append("\nThe Chess Board:\n")
+      sb.append("\t\tBlack Player\n")
+      sb.append("    ")
+      //println("\nThe Chess Board:")
+      //println("\t\tBlack Player")
+      //print("    ")
       //print A to H above the board
-      List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach print
-      println()
+      List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach sb.append
+      sb.append("\n")
+      //println()
       for(i<- b.indices){
-        print(s"${8-i}  " + bg1);  //print 1 to 8 on the left side
+        sb.append(s"${8-i}  " + bg1)
+        //print(s"${8-i}  " + bg1);  //print 1 to 8 on the left side
         for(j<- b.indices){
-          print(s"${if(b(i)(j)(0) == '-' || b(i)(j)(0) == '_') bg1 else bg2}" +
+          sb.append(s"${if(b(i)(j)(0) == '-' || b(i)(j)(0) == '_') bg1 else bg2}" +
             s" ${if(b(i)(j)(1).isLower) p1 else p2}${b(i)(j)(1)} ")
+          /*print(s"${if(b(i)(j)(0) == '-' || b(i)(j)(0) == '_') bg1 else bg2}" +
+            s" ${if(b(i)(j)(1).isLower) p1 else p2}${b(i)(j)(1)} ")*/
         }
-        println(s"$reset  ${8-i}"); //print 1 to 8 on the right side
+        sb.append(s"$reset  ${8-i}\n")
+        //println(s"$reset  ${8-i}"); //print 1 to 8 on the right side
       }
-      print("    ")
+      sb.append("    ")
+      //print("    ")
       //print A to H below the board
-      List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach print
-      println("\n\t\tWhite Player")
+      List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach sb.append
+      sb.append("\n\t\tWhite Player")
+      //println("\n\t\tWhite Player")
+      var s = new String(sb.toString())
+      return s
     }
-    printBoard(board)
+    return printBoard(board)
   }
 
   def ChessController(board: Array[Array[String]], input: String, turn: Boolean): Boolean =

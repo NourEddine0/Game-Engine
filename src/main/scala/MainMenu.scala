@@ -1,11 +1,23 @@
+import Launcher.stage
+import ScalaFXHelloWorld.stage
+import scalafx.application.JFXApp3
+import scalafx.geometry.Insets
+import scalafx.scene.Scene
+import scalafx.scene.control.{Button, TextField}
+import scalafx.event.ActionEvent
+import scalafx.scene.effect.DropShadow
+import scalafx.scene.layout.HBox
+import scalafx.scene.paint.Color.{DarkGray, DarkRed, Red, White}
+import scalafx.scene.paint.{Color, LinearGradient, Stops}
+import scalafx.scene.text.Text
+
 import scala.annotation.unused
 
-object MainMenu extends App{
+object MainMenu extends JFXApp3{
   val RESET = "\u001b[0m" // Text Reset
-
   def getDrawer: Array[Array[String]] => Unit = MainMenuDrawer
 
-  def getController: Array[Array[String]] => Unit = MainMenuController
+  def getController: Engine = MainMenuController()
 
   def getBoard: Array[Array[String]] = {
     val board = Array.ofDim[String](4, 2)
@@ -32,35 +44,111 @@ object MainMenu extends App{
     }
 
 
-  def MainMenuController(@unused board: Array[Array[String]]): Unit ={
-    val in = scala.io.StdIn.readLine()
+  def MainMenuController(): Engine ={
+    var board: Array[Array[String]] = getBoard
 
+    var drawer: Array[Array[String]] => Unit = getDrawer
+
+    drawer(board)
+
+    val in = scala.io.StdIn.readLine()
     if(in.equals("1")){
-      val eng = new Engine(XO.getController, XO.getDrawer, XO.getBoard)
-      eng.startGame
+
+      val engine = new Engine(XO.getController, XO.getDrawer, XO.getBoard)
+      //engine.startGame
+      return engine
     }
     if(in.equals("2")){
-      val eng = new Engine(Chess.getController, Chess.getDrawer, Chess.getBoard)
-      eng.startGame
+
+      val engine = new Engine(Chess.getController, Chess.getDrawer, Chess.getBoard)
+      //engine.startGame
+      return engine
+
+      //eng.startGame
 
     }
     if(in.equals("3")){
-      val eng = new Engine(Checkers.getController, Checkers.getDrawer, Checkers.getBoard)
-      eng.startGame
+
+      //engine.startGame
+
+      val engine = new Engine(Checkers.getController, Checkers.getDrawer, Checkers.getBoard)
+
+      return engine//eng.startGame
 
     }
 
     if(in.equals("4")){
-      val eng = new Engine(Connect4.getController, Connect4.getDrawer, Connect4.getBoard)
-      eng.startGame
-    }
-  }
 
-  var board = getBoard
-  var drawer = getDrawer
-  var controller = getController
-  drawer(board)
-  controller(board)
+      val engine = new Engine(Connect4.getController, Connect4.getDrawer, Connect4.getBoard)
+      //engine.startGame
+      return engine
+      //val eng = new Engine(Connect4.getController, Connect4.getDrawer, Connect4.getBoard)
+      //eng.startGame
+    }
+
+    val engine = new Engine(XO.getController, XO.getDrawer, XO.getBoard)
+    //engine.startGame
+    return engine
+  }
+override def start(): Unit ={
+/*
+*/
+  /*
+  stage = new JFXApp3.PrimaryStage {
+    //    initStyle(StageStyle.Unified)
+    title = "ScalaFX Hello World"
+    scene = new Scene {
+      fill = Color.rgb(38, 38, 38)
+      content = new HBox {
+        padding = Insets(50, 80, 50, 80)
+        children = Seq(
+
+
+          }
+        )
+      }
+    }
+  }*/
+
+  stage = new JFXApp3.PrimaryStage {
+    title = "Game Launcher"
+    scene = new Scene (1000,750){
+      //fill = Color.rgb(38, 38, 38)
+      var controller: Engine = getController
+      val engine: Engine = controller;/*controller(engine);*/
+
+
+
+          var text1: Text = new Text {
+            text = engine.Drawer(engine.Board);
+            style = "-fx-font: normal bold 10pt sans-serif"
+            fill = new LinearGradient(
+              endX = 0,
+              stops = Stops(Red, DarkRed))
+          };
+      text1.layoutX = 300
+      text1.layoutY = 100
+          var text2: TextField = new TextField {
+            promptText = "Enter your move"
+            fill = new LinearGradient(
+              endX = 0,
+              stops = Stops(White, DarkGray)
+            )
+          };
+      text2.layoutX = 0
+      text2.layoutY = 203
+      val button: Button = new Button {
+        text = "Move"
+        onAction = _ => {
+          var move = text2.text.value ;
+          engine.validateMove(move);
+          text1.text = engine.Drawer(engine.Board);
+        };
+      };
+      content = List(text1, text2,button)
+  }
+}
+}
 }
 
 

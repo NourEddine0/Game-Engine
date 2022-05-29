@@ -10,13 +10,13 @@ object Checkers{
 		Array("- ", ".o", "- ", ".o", "- ", ".o", "- ", ".o"),
 		Array(".o", "- ", ".o", "- ", ".o", "- ", ".o", "- ") )
 
-	def getDrawer: Array[Array[String]] => Unit = CheckersDrawer
+	def getDrawer: Array[Array[String]] => String = CheckersDrawer
 	def getController: (Array[Array[String]], String, Boolean) => Boolean = CheckersController
 	def getBoard: Array[Array[String]] = board
 
-	def CheckersDrawer(board: Array[Array[String]]): Unit = {
+	def CheckersDrawer(board: Array[Array[String]]): String = {
 		/* Prints the whole board with its content in a square format. */
-		def printBoard(b: Array[Array[String]]): Unit = {
+		def printBoard(b: Array[Array[String]]): String = {
 			// Reset font color & background color
 			val RESET = "\u001b[0m" // Text Reset
 			// Bold font color
@@ -32,26 +32,39 @@ object Checkers{
 			val p2 = BLACK_BOLD //player 2's pieces color
 			val reset = RESET
 			//print the Checkers board
-			println("\nThe Checkers Board:")
-			println("\t\tBlack Player (2)")
-			print("    ")
+			var sb = new StringBuilder
+			sb.append("\nThe Checkers Board:\n")
+			//println("\nThe Checkers Board:")
+			sb.append("\t\tBlack Player (2)\n")
+			//println("\t\tBlack Player (2)")
+			sb.append("    ");
+			//print("    ")
 			//print A to H above the board
-			List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach print
-			println()
+			List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach sb.append
+			sb.append("\n")
+			//println()
 			for(i<- b.indices){
+				sb.append(s"${8-i}  " + bg1)
 				print(s"${8-i}  " + bg1);  //print 1 to 8 on the left side
 				for(j<- b.indices){
-					print(s"${if(b(i)(j)(0) == '-') bg1 else bg2}" +
+					sb.append(s"${if(b(i)(j)(0) == '-') bg1 else bg2}" +
 						s" ${if(b(i)(j)(1).isLower) p1 else p2}${b(i)(j)(1)} ")
+					/*print(s"${if(b(i)(j)(0) == '-') bg1 else bg2}" +
+						s" ${if(b(i)(j)(1).isLower) p1 else p2}${b(i)(j)(1)} ")*/
 				}
-				println(s"$reset  ${8-i}"); //print 1 to 8 on the right side
+				sb.append(s"$reset  ${8-i}\n");
+				//println(s"$reset  ${8-i}"); //print 1 to 8 on the right side
 			}
+			sb.append("    ")
 			print("    ")
 			//print A to H below the board
-			List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach print
+			List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach sb.append
+			sb.append("\n\t\tWhite Player (1)")
 			println("\n\t\tWhite Player (1)")
+			var s = new String(sb.toString())
+			return s
 		}
-		printBoard(board)
+		return printBoard(board)
 	}
 	
 	def CheckersController (Board: Array[Array[String]], input: String, turn: Boolean):Boolean = {

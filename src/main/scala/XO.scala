@@ -2,7 +2,7 @@
 
 
 object XO {
-	def getDrawer: Array[Array[String]] => Unit = XODrawer
+	def getDrawer: Array[Array[String]] => String = XODrawer
 	def getController:(Array[Array[String]], String, Boolean) => Boolean = XOController
 	def getBoard:Array[Array[String]] = {
 		Array(Array(" ", " ", " "),
@@ -10,20 +10,28 @@ object XO {
 					Array(" ", " ", " "))
 	}
 
-	def XODrawer(board: Array[Array[String]]): Unit = {
+	def XODrawer(board: Array[Array[String]]): String = {
 		/* Prints the whole board with its content in a square format. */
-		def printBoard(b: Array[Array[String]]): Unit = {
-		println("    a   b   c")
+		def printBoard(b: Array[Array[String]]): String = {
+      var sb = new StringBuilder
+      sb.append("  a   b   c\n");
+		//println("    a   b   c")
 		for(i <- b.indices){
-			print(s"${b.length - i} | ")
+			sb.append(s"${b.length - i} |");
+			//print(s"${b.length - i} | ")
 			for(j<- b.indices){
-			print(s"${b(i)(j)} | ")
+				sb.append(s"${b(i)(j)} |")
+			//print(s"${b(i)(j)} | ")
 			}
-			println(s"${b.length - i}")
+			sb.append(s"${b.length - i}\n");
+			//println(s"${b.length - i}")
 		}
-		println("    a   b   c")
+			sb.append("    a b c\n")
+		//println("    a   b   c")
+			var s = new String(sb.toString());
+			return s;
 		}
-		printBoard (board)
+		return printBoard (board)
 	}
 
 	def XOController(board: Array[Array[String]], input:String, turn:Boolean): Boolean = {
