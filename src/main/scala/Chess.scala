@@ -20,52 +20,29 @@ object Chess {
   def ChessDrawer(board: Array[Array[String]]): String = {
     /* Prints the whole board with its content in a square format. */
     def printBoard(b: Array[Array[String]]): String = {
-      // Reset font color & background color
-      val RESET = ""; // Text Reset
-      // Bold font color
-      val BLACK_BOLD = "";
-      val WHITE_BOLD_BRIGHT = "";
-      // Background colors
-      val WHITE_BACKGROUND = "";
-      val BLACK_BACKGROUND_BRIGHT = "";
-      //setting colors
-      val bg1 = WHITE_BACKGROUND //block color 1
-      val bg2 = BLACK_BACKGROUND_BRIGHT //block color 2
-      val p1 = WHITE_BOLD_BRIGHT //player 1's pieces color
-      val p2 = BLACK_BOLD //player 2's pieces color
-      val reset = RESET
-      //print the chess board
       var sb = new StringBuilder
       sb.append("\nThe Chess Board:\n")
-      sb.append("\t\tBlack Player\n")
-      sb.append("    ")
-      //println("\nThe Chess Board:")
-      //println("\t\tBlack Player")
-      //print("    ")
+      sb.append("\tBlack Player\n")
+      sb.append("\t")
       //print A to H above the board
-      List("A  ", "B  ", "C  ", "D  ", "E  ", "F  ", "G  ", "H  ") foreach sb.append
+      List("A\t", "B\t", "C\t", "D\t", "E\t", "F\t", "G\t", "H\t") foreach sb.append
       sb.append("\n")
       //println()
       for(i<- b.indices){
-        sb.append(s"${8-i}  " + bg1)
-        //print(s"${8-i}  " + bg1);  //print 1 to 8 on the left side
+        sb.append(s"${8-i}\t")
         for(j<- b.indices){
-          sb.append(s"${if(b(i)(j)(0) == '-' || b(i)(j)(0) == '_') bg1 else bg2}" +
-            s" ${if(b(i)(j)(1).isLower) p1 else p2}${b(i)(j)(1)} ")
-          /*print(s"${if(b(i)(j)(0) == '-' || b(i)(j)(0) == '_') bg1 else bg2}" +
-            s" ${if(b(i)(j)(1).isLower) p1 else p2}${b(i)(j)(1)} ")*/
+          sb.append(s"${b(i)(j)}")
+          if(b(i)(j)(1) == ' ') sb.append(" ")
+          sb.append("\t")
         }
-        sb.append(s"$reset  ${8-i}\n")
-        //println(s"$reset  ${8-i}"); //print 1 to 8 on the right side
+        sb.append(s" ${8-i}\n")
       }
-      sb.append("    ")
-      //print("    ")
+      sb.append("\t")
       //print A to H below the board
-      List("A\t", "B\t", "C\t", "D\t", "E\t", "F\t", "G  ", "H\t") foreach sb.append
-      sb.append("\n\t\tWhite Player")
-      //println("\n\t\tWhite Player")
-      var s = new String(sb.toString())
-      return s
+      List("A\t", "B\t", "C\t", "D\t", "E\t", "F\t", "G\t", "H\t") foreach sb.append
+      sb.append("\n\tWhite Player")
+      val s = new String(sb.toString())
+      s
     }
     return printBoard(board)
   }
